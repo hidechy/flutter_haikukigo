@@ -6,7 +6,7 @@ import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 
 class SearchScreen extends ConsumerWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,14 +25,14 @@ class SearchScreen extends ConsumerWidget {
       isTitleDisplay: false,
       widget: Column(
         children: [
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Container(
             alignment: Alignment.topRight,
             child: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.white,
               ),

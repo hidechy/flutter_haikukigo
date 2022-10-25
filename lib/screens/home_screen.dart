@@ -15,9 +15,18 @@ class HomeScreen extends ConsumerWidget {
 
   List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
 
+  Map<String, GlobalKey> seasonsGlobalKeys = {
+    'Spring': GlobalKey(),
+    'Summer': GlobalKey(),
+    'Autumn': GlobalKey(),
+    'Winter': GlobalKey(),
+    'NewYear': GlobalKey(),
+  };
+
   late WidgetRef _ref;
   late BuildContext _context;
 
+  ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _ref = ref;
@@ -70,11 +79,11 @@ class HomeScreen extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SearchScreen(),
+                        builder: (context) => const SearchScreen(),
                       ),
                     );
                   },
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                 ),
               ),
             ],
@@ -133,9 +142,13 @@ class HomeScreen extends ConsumerWidget {
     final randomSeasonWordState =
         _ref.watch(randomSeasonWordProvider('spring'));
 
+    final searchSeasonWordParamState =
+        _ref.watch(searchSeasonWordParamProvider);
+
     final size = MediaQuery.of(_context).size;
 
     return ListView.separated(
+      key: seasonsGlobalKeys[searchSeasonWordParamState.season],
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         return Card(

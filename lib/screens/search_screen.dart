@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:haikukigo/screens/components/kigo_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../layouts/default_layout.dart';
@@ -18,11 +19,13 @@ class SearchScreen extends ConsumerWidget {
 
   List<String> categories = ['人事', '植物', '宗教', '地理', '動物', '時候', '天文'];
 
+  late BuildContext _context;
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     _ref = ref;
 
     final searchSeasonWordParamState = ref.watch(searchSeasonWordParamProvider);
@@ -34,9 +37,7 @@ class SearchScreen extends ConsumerWidget {
     final searchSeasonWordResultState =
         ref.watch(searchSeasonWordResultProvider);
 
-    print(searchSeasonWordResultState);
-
-    final kanaHead = kana.split(',');
+//    print(searchSeasonWordResultState);
 
     final size = MediaQuery.of(context).size;
 
@@ -67,65 +68,13 @@ class SearchScreen extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: size.height * 0.4,
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: kanaHead.map((val) {
-                  return GestureDetector(
-                    onTap: () {
-                      ref
-                          .watch(searchSeasonWordParamProvider.notifier)
-                          .setKanaHead(kanaHead: val);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: (searchSeasonWordParamState.kanaHead == val)
-                            ? Colors.yellowAccent.withOpacity(0.5)
-                            : Colors.green[900]!.withOpacity(0.5),
-                      ),
-                      child: Text(val),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
+          makeKanaBlock(),
           Row(
             children: [
               SizedBox(
                 width: (size.width * 0.8) - 20,
                 height: (size.height * 0.4) - 50,
-                child: ListView.separated(
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        ref
-                            .watch(searchSeasonWordParamProvider.notifier)
-                            .setCategory(category: categories[index]);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
-                        ),
-                        decoration: BoxDecoration(
-                          color: (searchSeasonWordParamState.category ==
-                                  categories[index])
-                              ? Colors.yellowAccent.withOpacity(0.5)
-                              : Colors.green[900]!.withOpacity(0.5),
-                        ),
-                        child: Text(categories[index]),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => Container(),
-                  itemCount: categories.length,
-                ),
+                child: makeCategoryBlock(),
               ),
               SizedBox(
                 width: size.width * 0.2,
@@ -147,6 +96,20 @@ class SearchScreen extends ConsumerWidget {
               ref
                   .watch(searchSeasonWordResultProvider.notifier)
                   .getSearchedSeasonWord(param: searchSeasonWordParamState);
+
+              showDialog(
+                context: context,
+                builder: (_) {
+                  return Dialog(
+                    backgroundColor: Colors.blueGrey.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    insetPadding: const EdgeInsets.all(30),
+                    child: KigoAlert(),
+                  );
+                },
+              );
             },
             child: Container(
               padding:
@@ -156,6 +119,77 @@ class SearchScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  ///
+  Widget makeKanaBlock() {
+    final kanaHead = kana.split(',');
+
+    final size = MediaQuery.of(_context).size;
+
+    final searchSeasonWordParamState =
+        _ref.watch(searchSeasonWordParamProvider);
+
+    return SizedBox(
+      height: size.height * 0.4,
+      child: SingleChildScrollView(
+        child: Wrap(
+          children: kanaHead.map((val) {
+            return GestureDetector(
+              onTap: () {
+                _ref
+                    .watch(searchSeasonWordParamProvider.notifier)
+                    .setKanaHead(kanaHead: val);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: (searchSeasonWordParamState.kanaHead == val)
+                      ? Colors.yellowAccent.withOpacity(0.5)
+                      : Colors.green[900]!.withOpacity(0.5),
+                ),
+                child: Text(val),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  ///
+  Widget makeCategoryBlock() {
+    final searchSeasonWordParamState =
+        _ref.watch(searchSeasonWordParamProvider);
+
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            _ref
+                .watch(searchSeasonWordParamProvider.notifier)
+                .setCategory(category: categories[index]);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            decoration: BoxDecoration(
+              color: (searchSeasonWordParamState.category == categories[index])
+                  ? Colors.yellowAccent.withOpacity(0.5)
+                  : Colors.green[900]!.withOpacity(0.5),
+            ),
+            child: Text(categories[index]),
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => Container(),
+      itemCount: categories.length,
     );
   }
 
@@ -198,6 +232,54 @@ class SearchScreen extends ConsumerWidget {
 
     return Column(
       children: list,
+    );
+  }
+}
+
+///////////////////////////////////////////////////////
+
+class KigoAlert extends ConsumerWidget {
+  const KigoAlert({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchSeasonWordResultState =
+        ref.watch(searchSeasonWordResultProvider);
+
+    Size size = MediaQuery.of(context).size;
+
+    List<Widget> list = [];
+
+    list.add(
+      Column(
+        children: [
+          Text(searchSeasonWordResultState.record.length.toString()),
+          Divider(),
+        ],
+      ),
+    );
+
+    for (var i = 0; i < searchSeasonWordResultState.record.length; i++) {
+      list.add(
+        KigoCard(
+          size: size,
+          kigo: searchSeasonWordResultState.record[i],
+        ),
+      );
+    }
+
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      content: SizedBox(
+        height: MediaQuery.of(context).size.height - 50,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: list,
+          ),
+        ),
+      ),
     );
   }
 }

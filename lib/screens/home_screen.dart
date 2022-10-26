@@ -8,6 +8,7 @@ import '../layouts/default_layout.dart';
 import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 
+import 'components/kigo_card.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -69,13 +70,15 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Container(
                 width: 50,
-                decoration: BoxDecoration(color: Colors.green[900]),
+                decoration:
+                    BoxDecoration(color: Colors.green[900]!.withOpacity(0.5)),
                 child: dispSeasonMenu(),
               ),
               const SizedBox(height: 30),
               Container(
                 width: 50,
-                decoration: BoxDecoration(color: Colors.green[900]),
+                decoration:
+                    BoxDecoration(color: Colors.green[900]!.withOpacity(0.5)),
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -106,7 +109,7 @@ class HomeScreen extends ConsumerWidget {
 
     for (var i = 0; i < seasons.length; i++) {
       list.add(
-        Padding(
+        Container(
           padding: const EdgeInsets.only(bottom: 50),
           child: GestureDetector(
             onTap: () {
@@ -153,48 +156,9 @@ class HomeScreen extends ConsumerWidget {
       key: seasonsGlobalKeys[searchSeasonWordParamState.season],
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        return Card(
-          color: Colors.black.withOpacity(0.2),
-          child: Column(
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: size.height / 6,
-                ),
-                child: ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        randomSeasonWordState.record[index].title,
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                      Text(randomSeasonWordState.record[index].yomi),
-                      const Divider(),
-                      Text(randomSeasonWordState.record[index].detail),
-                    ],
-                  ),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.green[900],
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                        randomSeasonWordState.record[index].length.toString()),
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topRight,
-                child: Text(
-                  randomSeasonWordState.record[index].category,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
+        return KigoCard(
+          size: size,
+          kigo: randomSeasonWordState.record[index],
         );
       },
       separatorBuilder: (context, index) => Divider(

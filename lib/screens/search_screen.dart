@@ -6,8 +6,16 @@ import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 
 class SearchScreen extends ConsumerWidget {
-  const SearchScreen({super.key});
+  SearchScreen({super.key});
 
+  List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
+
+  String kana =
+      'あ,い,う,え,お,か,き,く,け,こ,さ,し,す,せ,そ,た,ち,つ,て,と,な,に,ぬ,ね,の,は,ひ,ふ,へ,ほ,ま,み,む,め,も,や,ゆ,よ,ら,り,る,れ,ろ,わ';
+
+  List<String> categories = ['人事', '植物', '宗教', '地理', '動物', '時候', '天文'];
+
+  ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchSeasonWordParamState = ref.watch(searchSeasonWordParamProvider);
@@ -19,6 +27,8 @@ class SearchScreen extends ConsumerWidget {
     );
 
     print(randomSeasonWordState);
+
+    List<String> kanaHead = kana.split(',');
 
     return DefaultLayout(
       title: '',

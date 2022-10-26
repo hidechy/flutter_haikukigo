@@ -23,6 +23,8 @@ class HomeScreen extends ConsumerWidget {
     'NewYear': GlobalKey(),
   };
 
+  List<String> seasonsJp = ['春', '夏', '秋', '冬', '新年'];
+
   late WidgetRef _ref;
   late BuildContext _context;
 
@@ -79,7 +81,7 @@ class HomeScreen extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SearchScreen(),
+                        builder: (context) => SearchScreen(),
                       ),
                     );
                   },

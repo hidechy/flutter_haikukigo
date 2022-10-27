@@ -1,13 +1,14 @@
 // ignore_for_file: must_be_immutable, cascade_invocations
 
 import 'package:flutter/material.dart';
-import 'package:haikukigo/screens/components/kigo_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../layouts/default_layout.dart';
 import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 import '../viewmodel/search_season_word_result_viewmodel.dart';
+
+import 'components/kigo_card.dart';
 
 class SearchScreen extends ConsumerWidget {
   SearchScreen({super.key});
@@ -19,16 +20,16 @@ class SearchScreen extends ConsumerWidget {
 
   List<String> categories = ['人事', '植物', '宗教', '地理', '動物', '時候', '天文'];
 
-  double upperBlockHeight = 0.0;
-  double underBlockHeight = 0.0;
+  double upperBlockHeight = 0.1;
+  double underBlockHeight = 0.1;
 
-  late BuildContext _context;
+  final TextEditingController searchKigoController = TextEditingController();
+
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _context = context;
     _ref = ref;
 
     final searchSeasonWordParamState = ref.watch(searchSeasonWordParamProvider);
@@ -41,7 +42,7 @@ class SearchScreen extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        upperBlockHeight = size.height * 0.2;
+        upperBlockHeight = size.height * 0.35;
         underBlockHeight = (size.height * 0.4) - 50;
       },
     );
@@ -73,6 +74,24 @@ class SearchScreen extends ConsumerWidget {
               ),
             ],
           ),
+          TextField(
+            decoration: InputDecoration(
+                fillColor: Colors.grey.withOpacity(0.3),
+                filled: true,
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                  horizontal: 4,
+                ),
+                prefixIcon: GestureDetector(
+                  onTap: () {
+                    searchKigoController.text = '';
+                  },
+                  child: const Icon(Icons.change_circle_outlined),
+                )),
+            controller: searchKigoController,
+          ),
+          SizedBox(height: 10),
           makeKanaBlock(),
           Row(
             children: [
@@ -100,7 +119,10 @@ class SearchScreen extends ConsumerWidget {
             onPressed: () {
               ref
                   .watch(searchSeasonWordResultProvider.notifier)
-                  .getSearchedSeasonWord(param: searchSeasonWordParamState);
+                  .getSearchedSeasonWord(
+                    title: searchKigoController.text,
+                    param: searchSeasonWordParamState,
+                  );
 
               showDialog(
                 context: context,
@@ -131,8 +153,6 @@ class SearchScreen extends ConsumerWidget {
   Widget makeKanaBlock() {
     final kanaHead = kana.split(',');
 
-    final size = MediaQuery.of(_context).size;
-
     final searchSeasonWordParamState =
         _ref.watch(searchSeasonWordParamProvider);
 
@@ -149,13 +169,16 @@ class SearchScreen extends ConsumerWidget {
               },
               child: Container(
                 padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: (searchSeasonWordParamState.kanaHead == val)
                       ? Colors.yellowAccent.withOpacity(0.5)
                       : Colors.green[900]!.withOpacity(0.5),
                 ),
-                child: Text(val),
+                child: Text(
+                  val,
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             );
           }).toList(),
@@ -180,16 +203,16 @@ class SearchScreen extends ConsumerWidget {
           },
           child: Container(
             padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 20,
-            ),
+            margin: const EdgeInsets.only(left: 20, right: 0, bottom: 10),
             decoration: BoxDecoration(
               color: (searchSeasonWordParamState.category == categories[index])
                   ? Colors.yellowAccent.withOpacity(0.5)
                   : Colors.green[900]!.withOpacity(0.5),
             ),
-            child: Text(categories[index]),
+            child: Text(
+              categories[index],
+              style: TextStyle(fontSize: 12),
+            ),
           ),
         );
       },
@@ -226,10 +249,13 @@ class SearchScreen extends ConsumerWidget {
                       : Colors.green[900]!.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: Text(i.toString()),
+                child: Text(
+                  i.toString(),
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
           ],
         ),
       );

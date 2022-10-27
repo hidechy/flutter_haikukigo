@@ -29,10 +29,11 @@ class SearchSeasonWordResultNotifier extends StateNotifier<SeasonWordState> {
   final HttpClient client;
 
   Future<void> getSearchedSeasonWord(
-      {required SearchWordParamState param}) async {
+      {required String title, required SearchWordParamState param}) async {
     await client.post(
       path: 'getKigoSearchedList',
       body: {
+        'title': title,
         'season': param.season,
         'yomi_head': param.kanaHead,
         'length': param.length,

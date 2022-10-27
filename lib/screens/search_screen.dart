@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, cascade_invocations
 
 import 'package:flutter/material.dart';
 import 'package:haikukigo/screens/components/kigo_card.dart';
@@ -33,11 +33,6 @@ class SearchScreen extends ConsumerWidget {
     final randomSeasonWordState = ref.watch(
       randomSeasonWordProvider(searchSeasonWordParamState.season),
     );
-
-    final searchSeasonWordResultState =
-        ref.watch(searchSeasonWordResultProvider);
-
-//    print(searchSeasonWordResultState);
 
     final size = MediaQuery.of(context).size;
 
@@ -80,7 +75,7 @@ class SearchScreen extends ConsumerWidget {
                 width: size.width * 0.2,
                 height: (size.height * 0.4) - 50,
                 child: SingleChildScrollView(
-                  child: dispKigoLength(
+                  child: makeKigoLengthBlock(
                     min: randomSeasonWordState.min,
                     max: randomSeasonWordState.max,
                   ),
@@ -91,7 +86,7 @@ class SearchScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                primary: Colors.blueAccent.withOpacity(0.3)),
+                backgroundColor: Colors.blueAccent.withOpacity(0.3)),
             onPressed: () {
               ref
                   .watch(searchSeasonWordResultProvider.notifier)
@@ -106,7 +101,7 @@ class SearchScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     insetPadding: const EdgeInsets.all(30),
-                    child: KigoAlert(),
+                    child: const KigoAlert(),
                   );
                 },
               );
@@ -194,7 +189,7 @@ class SearchScreen extends ConsumerWidget {
   }
 
   ///
-  Widget dispKigoLength({required int min, required int max}) {
+  Widget makeKigoLengthBlock({required int min, required int max}) {
     final searchSeasonWordParamState =
         _ref.watch(searchSeasonWordParamProvider);
 
@@ -239,22 +234,27 @@ class SearchScreen extends ConsumerWidget {
 ///////////////////////////////////////////////////////
 
 class KigoAlert extends ConsumerWidget {
-  const KigoAlert({Key? key}) : super(key: key);
+  const KigoAlert({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchSeasonWordResultState =
         ref.watch(searchSeasonWordResultProvider);
 
-    Size size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
-    List<Widget> list = [];
+    final list = <Widget>[];
 
     list.add(
       Column(
         children: [
-          Text(searchSeasonWordResultState.record.length.toString()),
-          Divider(),
+          Container(
+            alignment: Alignment.topRight,
+            child: Text(
+              searchSeasonWordResultState.record.length.toString(),
+            ),
+          ),
+          const Divider(),
         ],
       ),
     );

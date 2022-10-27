@@ -19,6 +19,9 @@ class SearchScreen extends ConsumerWidget {
 
   List<String> categories = ['人事', '植物', '宗教', '地理', '動物', '時候', '天文'];
 
+  double upperBlockHeight = 0.0;
+  double underBlockHeight = 0.0;
+
   late BuildContext _context;
   late WidgetRef _ref;
 
@@ -35,6 +38,13 @@ class SearchScreen extends ConsumerWidget {
     );
 
     final size = MediaQuery.of(context).size;
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        upperBlockHeight = size.height * 0.2;
+        underBlockHeight = (size.height * 0.4) - 50;
+      },
+    );
 
     return DefaultLayout(
       title: '',
@@ -68,12 +78,12 @@ class SearchScreen extends ConsumerWidget {
             children: [
               SizedBox(
                 width: (size.width * 0.8) - 20,
-                height: (size.height * 0.4) - 50,
+                height: underBlockHeight,
                 child: makeCategoryBlock(),
               ),
               SizedBox(
                 width: size.width * 0.2,
-                height: (size.height * 0.4) - 50,
+                height: underBlockHeight,
                 child: SingleChildScrollView(
                   child: makeKigoLengthBlock(
                     min: randomSeasonWordState.min,
@@ -127,7 +137,7 @@ class SearchScreen extends ConsumerWidget {
         _ref.watch(searchSeasonWordParamProvider);
 
     return SizedBox(
-      height: size.height * 0.4,
+      height: upperBlockHeight,
       child: SingleChildScrollView(
         child: Wrap(
           children: kanaHead.map((val) {

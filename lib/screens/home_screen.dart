@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import '../layouts/default_layout.dart';
 import '../viewmodel/random_season_word_viewmodel.dart';
@@ -14,15 +15,9 @@ import 'search_screen.dart';
 class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key});
 
-  List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
+  var uuid = const Uuid();
 
-  Map<String, GlobalKey> seasonsGlobalKeys = {
-    'Spring': GlobalKey(),
-    'Summer': GlobalKey(),
-    'Autumn': GlobalKey(),
-    'Winter': GlobalKey(),
-    'NewYear': GlobalKey(),
-  };
+  List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
 
   List<String> seasonsJp = ['春', '夏', '秋', '冬', '新年'];
 
@@ -111,26 +106,25 @@ class HomeScreen extends ConsumerWidget {
       list.add(
         Container(
           padding: const EdgeInsets.only(bottom: 50),
-          child: GestureDetector(
-            onTap: () {
-              _ref
-                  .watch(searchSeasonWordParamProvider.notifier)
-                  .setSeason(season: seasons[i]);
-
-              _ref
-                  .watch(randomSeasonWordProvider('spring').notifier)
-                  .getRandomSeasonWord(season: seasons[i]);
-            },
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: Text(
+          child: RotatedBox(
+            quarterTurns: 1,
+            child: ChoiceChip(
+              backgroundColor: Colors.greenAccent.withOpacity(0.3),
+              selectedColor: Colors.yellowAccent.withOpacity(0.3),
+              label: Text(
                 seasons[i],
-                style: TextStyle(
-                  color: (searchSeasonWordParamState.season == seasons[i])
-                      ? Colors.yellowAccent
-                      : Colors.white,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
+              selected: searchSeasonWordParamState.season == seasons[i],
+              onSelected: (_) {
+                _ref
+                    .watch(searchSeasonWordParamProvider.notifier)
+                    .setSeason(season: seasons[i]);
+
+                _ref
+                    .watch(randomSeasonWordProvider('spring').notifier)
+                    .getRandomSeasonWord(season: seasons[i]);
+              },
             ),
           ),
         ),
@@ -153,7 +147,7 @@ class HomeScreen extends ConsumerWidget {
     final size = MediaQuery.of(_context).size;
 
     return ListView.separated(
-      key: seasonsGlobalKeys[searchSeasonWordParamState.season],
+      key: PageStorageKey(uuid.v1()),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         return KigoCard(

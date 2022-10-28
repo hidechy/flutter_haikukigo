@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../state/search_word_param_state.dart';
 
 //////////////////////////////////////////////////////
-
 final searchSeasonWordParamProvider = StateNotifierProvider.autoDispose<
     SearchSeasonWordParamNotifier, SearchWordParamState>((ref) {
   return SearchSeasonWordParamNotifier(

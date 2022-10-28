@@ -49,27 +49,12 @@ class KigoCard extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
-                Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        kigo.category,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Text(
-                      kigo.cnt.toString(),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
+            Container(
+              alignment: Alignment.topRight,
+              child: Text(
+                kigo.category,
+                style: const TextStyle(color: Colors.grey),
+              ),
             ),
           ],
         ),

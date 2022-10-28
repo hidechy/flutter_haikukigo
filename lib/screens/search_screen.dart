@@ -268,7 +268,6 @@ class SearchScreen extends ConsumerWidget {
 }
 
 ///////////////////////////////////////////////////////
-
 class KigoAlert extends ConsumerWidget {
   const KigoAlert({super.key});
 

@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, cascade_invocations
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -9,17 +10,14 @@ import '../layouts/default_layout.dart';
 import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 
+import '../viewmodel/season_viewmodel.dart';
 import 'components/kigo_card.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   HomeScreen({super.key});
 
-  var uuid = const Uuid();
-
-  List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
-
-  List<String> seasonsJp = ['春', '夏', '秋', '冬', '新年'];
+  Uuid uuid = const Uuid();
 
   late WidgetRef _ref;
   late BuildContext _context;
@@ -47,12 +45,17 @@ class HomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 50),
-                  Text(
-                    searchSeasonWordParamState.season,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        searchSeasonWordParamState.season,
+                        style: GoogleFonts.islandMoments(
+                          color: Colors.white,
+                          fontSize: 60,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Expanded(child: dispSeasonWord()),
@@ -65,15 +68,17 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Container(
                 width: 50,
-                decoration:
-                    BoxDecoration(color: Colors.green[900]!.withOpacity(0.5)),
+                decoration: BoxDecoration(
+                  color: Colors.green[900]!.withOpacity(0.5),
+                ),
                 child: dispSeasonMenu(),
               ),
               const SizedBox(height: 30),
               Container(
                 width: 50,
-                decoration:
-                    BoxDecoration(color: Colors.green[900]!.withOpacity(0.5)),
+                decoration: BoxDecoration(
+                  color: Colors.green[900]!.withOpacity(0.5),
+                ),
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -98,41 +103,61 @@ class HomeScreen extends ConsumerWidget {
     final searchSeasonWordParamState =
         _ref.watch(searchSeasonWordParamProvider);
 
-    final list = <Widget>[];
+    final seasonState = _ref.watch(seasonProvider);
 
-    list.add(const SizedBox(height: 100));
-
-    for (var i = 0; i < seasons.length; i++) {
-      list.add(
-        Container(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: RotatedBox(
-            quarterTurns: 1,
-            child: ChoiceChip(
-              backgroundColor: Colors.greenAccent.withOpacity(0.3),
-              selectedColor: Colors.yellowAccent.withOpacity(0.3),
-              label: Text(
-                seasons[i],
-                style: const TextStyle(color: Colors.white, fontSize: 10),
-              ),
-              selected: searchSeasonWordParamState.season == seasons[i],
-              onSelected: (_) {
-                _ref
-                    .watch(searchSeasonWordParamProvider.notifier)
-                    .setSeason(season: seasons[i]);
-
-                _ref
-                    .watch(randomSeasonWordProvider('spring').notifier)
-                    .getRandomSeasonWord(season: seasons[i]);
-              },
-            ),
-          ),
-        ),
-      );
-    }
+    final size = MediaQuery.of(_context).size;
 
     return Column(
-      children: list,
+      children: [
+        SizedBox(height: 40),
+        SizedBox(
+          height: size.height * 0.6,
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              return Container(
+                padding: const EdgeInsets.only(bottom: 30),
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                child: RotatedBox(
+                  quarterTurns: 1,
+                  child: ChoiceChip(
+                    backgroundColor: Colors.greenAccent.withOpacity(0.3),
+                    selectedColor: Colors.yellowAccent.withOpacity(0.3),
+                    label: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(seasonState.record[index].seasonJp),
+                        ),
+                        Text(
+                          seasonState.record[index].seasonEn,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    selected: searchSeasonWordParamState.season ==
+                        seasonState.record[index].seasonEn,
+                    onSelected: (_) {
+                      _ref
+                          .watch(searchSeasonWordParamProvider.notifier)
+                          .setSeason(
+                              season: seasonState.record[index].seasonEn);
+
+                      _ref
+                          .watch(randomSeasonWordProvider('spring').notifier)
+                          .getRandomSeasonWord(
+                              season: seasonState.record[index].seasonEn);
+                    },
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => Container(),
+            itemCount: seasonState.record.length,
+          ),
+        ),
+        SizedBox(height: 40),
+      ],
     );
   }
 
@@ -140,9 +165,6 @@ class HomeScreen extends ConsumerWidget {
   Widget dispSeasonWord() {
     final randomSeasonWordState =
         _ref.watch(randomSeasonWordProvider('spring'));
-
-    final searchSeasonWordParamState =
-        _ref.watch(searchSeasonWordParamProvider);
 
     final size = MediaQuery.of(_context).size;
 

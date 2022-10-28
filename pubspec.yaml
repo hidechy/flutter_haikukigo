@@ -27,6 +27,7 @@ dependencies:
   freezed_annotation:
 
   get:
+  google_fonts: ^3.0.1
   google_maps_flutter:
 
   hooks_riverpod:

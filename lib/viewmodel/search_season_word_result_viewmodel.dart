@@ -50,6 +50,7 @@ class SearchSeasonWordResultNotifier extends StateNotifier<SeasonWordState> {
             detail: oneData['detail'].toString(),
             length: int.parse(oneData['length'].toString()),
             category: oneData['category'].toString(),
+            cnt: int.parse(oneData['cnt'].toString()),
           ),
         );
       }

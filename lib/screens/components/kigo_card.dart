@@ -13,7 +13,7 @@ class KigoCard extends StatelessWidget {
     return Card(
       color: Colors.black.withOpacity(0.2),
       child: DefaultTextStyle(
-        style: TextStyle(fontSize: 12),
+        style: const TextStyle(fontSize: 12),
         child: Column(
           children: [
             ConstrainedBox(
@@ -22,7 +22,7 @@ class KigoCard extends StatelessWidget {
               ),
               child: ListTile(
                 title: DefaultTextStyle(
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -49,12 +49,27 @@ class KigoCard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.topRight,
-              child: Text(
-                kigo.category,
-                style: const TextStyle(color: Colors.grey),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        kigo.category,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      kigo.cnt.toString(),
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

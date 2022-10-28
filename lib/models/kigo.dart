@@ -5,6 +5,7 @@ class Kigo {
     required this.detail,
     required this.length,
     required this.category,
+    required this.cnt,
   });
 
   factory Kigo.fromJson(Map<String, dynamic> json) => Kigo(
@@ -13,6 +14,7 @@ class Kigo {
         detail: json['detail'].toString(),
         length: int.parse(json['length'].toString()),
         category: json['category'].toString(),
+        cnt: int.parse(json['cnt'].toString()),
       );
 
   String title;
@@ -20,6 +22,7 @@ class Kigo {
   String detail;
   int length;
   String category;
+  int cnt;
 
   Map<String, dynamic> toJson() => {
         'title': title,
@@ -27,5 +30,6 @@ class Kigo {
         'detail': detail,
         'length': length,
         'category': category,
+        'cnt': cnt,
       };
 }

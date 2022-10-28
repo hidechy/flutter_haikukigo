@@ -91,7 +91,7 @@ class SearchScreen extends ConsumerWidget {
                 )),
             controller: searchKigoController,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           makeKanaBlock(),
           Row(
             children: [
@@ -177,7 +177,7 @@ class SearchScreen extends ConsumerWidget {
                 ),
                 child: Text(
                   val,
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
             );
@@ -203,7 +203,7 @@ class SearchScreen extends ConsumerWidget {
           },
           child: Container(
             padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.only(left: 20, right: 0, bottom: 10),
+            margin: const EdgeInsets.only(left: 20, bottom: 10),
             decoration: BoxDecoration(
               color: (searchSeasonWordParamState.category == categories[index])
                   ? Colors.yellowAccent.withOpacity(0.5)
@@ -211,7 +211,7 @@ class SearchScreen extends ConsumerWidget {
             ),
             child: Text(
               categories[index],
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             ),
           ),
         );
@@ -251,7 +251,7 @@ class SearchScreen extends ConsumerWidget {
                 ),
                 child: Text(
                   i.toString(),
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
             ),

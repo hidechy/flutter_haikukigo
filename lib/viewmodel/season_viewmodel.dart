@@ -6,6 +6,8 @@ import '../data/http/client.dart';
 import '../models/season.dart';
 import '../state/season_state.dart';
 
+////////////////////////////////////////////////////////////
+
 final seasonProvider =
     StateNotifierProvider.autoDispose<SeasonNotifier, SeasonState>((ref) {
   final client = ref.read(httpClientProvider);
@@ -37,3 +39,5 @@ class SeasonNotifier extends StateNotifier<SeasonState> {
     });
   }
 }
+
+////////////////////////////////////////////////////////////

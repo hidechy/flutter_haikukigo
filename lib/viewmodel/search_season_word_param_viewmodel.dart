@@ -7,7 +7,7 @@ final searchSeasonWordParamProvider = StateNotifierProvider.autoDispose<
     SearchSeasonWordParamNotifier, SearchWordParamState>((ref) {
   return SearchSeasonWordParamNotifier(
     const SearchWordParamState(
-      season: 'Spring',
+      season: '-',
       kanaHead: '',
       length: 0,
       category: '',

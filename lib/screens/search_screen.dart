@@ -7,45 +7,34 @@ import '../layouts/default_layout.dart';
 import '../viewmodel/random_season_word_viewmodel.dart';
 import '../viewmodel/search_season_word_param_viewmodel.dart';
 import '../viewmodel/search_season_word_result_viewmodel.dart';
-
 import 'components/kigo_card.dart';
 
 class SearchScreen extends ConsumerWidget {
-  SearchScreen({super.key});
+  SearchScreen({super.key, required this.season});
 
-  List<String> seasons = ['Spring', 'Summer', 'Autumn', 'Winter', 'NewYear'];
+  final String season;
+
+  final TextEditingController searchKigoController = TextEditingController();
 
   String kana =
       'あ,い,う,え,お,か,き,く,け,こ,さ,し,す,せ,そ,た,ち,つ,て,と,な,に,ぬ,ね,の,は,ひ,ふ,へ,ほ,ま,み,む,め,も,や,ゆ,よ,ら,り,る,れ,ろ,わ';
 
   List<String> categories = ['人事', '植物', '宗教', '地理', '動物', '時候', '天文'];
 
-  double upperBlockHeight = 0.1;
-  double underBlockHeight = 0.1;
-
-  final TextEditingController searchKigoController = TextEditingController();
-
+  late BuildContext _context;
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     _ref = ref;
 
     final searchSeasonWordParamState = ref.watch(searchSeasonWordParamProvider);
 
-    final randomSeasonWordState = ref.watch(
-      randomSeasonWordProvider(searchSeasonWordParamState.season),
-    );
+    final randomSeasonWordState = ref.watch(randomSeasonWordProvider(season));
 
-    final size = MediaQuery.of(context).size;
-
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        upperBlockHeight = size.height * 0.35;
-        underBlockHeight = (size.height * 0.4) - 50;
-      },
-    );
+    final size = MediaQuery.of(_context).size;
 
     return DefaultLayout(
       title: '',
@@ -57,11 +46,8 @@ class SearchScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                searchSeasonWordParamState.season,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                ),
+                season,
+                style: const TextStyle(color: Colors.white, fontSize: 30),
               ),
               IconButton(
                 onPressed: () {
@@ -97,12 +83,12 @@ class SearchScreen extends ConsumerWidget {
             children: [
               SizedBox(
                 width: (size.width * 0.8) - 20,
-                height: underBlockHeight,
+                height: (size.height * 0.4) - 50,
                 child: makeCategoryBlock(),
               ),
               SizedBox(
                 width: size.width * 0.2,
-                height: underBlockHeight,
+                height: (size.height * 0.4) - 50,
                 child: SingleChildScrollView(
                   child: makeKigoLengthBlock(
                     min: randomSeasonWordState.min,
@@ -156,8 +142,10 @@ class SearchScreen extends ConsumerWidget {
     final searchSeasonWordParamState =
         _ref.watch(searchSeasonWordParamProvider);
 
+    final size = MediaQuery.of(_context).size;
+
     return SizedBox(
-      height: upperBlockHeight,
+      height: size.height * 0.35,
       child: SingleChildScrollView(
         child: Wrap(
           children: kanaHead.map((val) {

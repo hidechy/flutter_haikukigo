@@ -10,6 +10,8 @@ class KigoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dispCnt = '${kigo.cnt} / ${kigo.seasonCnt}';
+
     return Card(
       color: Colors.black.withOpacity(0.2),
       child: DefaultTextStyle(
@@ -49,12 +51,24 @@ class KigoCard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.topRight,
-              child: Text(
-                kigo.category,
-                style: const TextStyle(color: Colors.grey),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                Row(
+                  children: [
+                    Text(
+                      kigo.category,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(width: 20),
+                    Text(
+                      dispCnt,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
